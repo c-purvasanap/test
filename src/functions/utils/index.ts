@@ -36,7 +36,9 @@ export async function checkIfContactExistInDevRev(
 
 export async function setTags(tagsList: any[], sender: string) {
   const tagId: SetTagWithValue[] = [];
-  const tagValue = tagsList.find((tag) => tag.name === 'customer-number' && tag.display_id);
-  tagId.push({ id: tagValue?.display_id, value: sender });
+  const customerNumberTag = tagsList.find((tag) => tag.name === 'customer-number' && tag.display_id);
+  tagId.push({ id: customerNumberTag?.display_id, value: sender });
+  const channelSmsTag = tagsList.find((tag) => tag.name === 'channel-sms' && tag.display_id);
+  tagId.push({ id: channelSmsTag?.display_id });
   return tagId;
 }

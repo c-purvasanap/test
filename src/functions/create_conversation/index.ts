@@ -33,11 +33,16 @@ export async function createConversation(
   const tagDisplayId = tagsList.find((tag) => tag.name === TAG_CUSTOMER_NUMBER)?.display_id;
 
   const conversations: any[] = await getConversationsList(devrevSDK, sender, tagDisplayId);
-  if (conversations.length > 0) {
-    const conversationObject = conversations[0];
-    if (conversationObject.members.find((member: any) => member.id === revUserId)) {
-      await createExternalTimelineComment(revUserSDK, conversations[0].display_id, updatedContent);
-    }
+  if (
+    conversations.length > 0 &&
+    conversations[0].members.find(
+      (member: any) =>
+        member.id === revUserId &&
+        conversations[0].stage?.name !== 'resolved' &&
+        conversations[0].stage?.name !== 'archived'
+    )
+  ) {
+    await createExternalTimelineComment(revUserSDK, conversations[0].display_id, updatedContent);
   } else {
     const revUserToken = await getRevUserByUserID(revUserId, devrevSDK);
 
